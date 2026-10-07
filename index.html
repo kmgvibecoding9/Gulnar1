@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Дневник малыша</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#fdf3df; --card:#fffdf8; --ink:#3f4a45; --muted:#7f8a83; --line:#f0e3c8;
+  --sage:#8fc4a0; --sage-d:#5f9a73; --sand:#f6e2b4; --blush:#fbd3c4; --sky:#bfe0ee;
+  --good:#9db5a3; --mid:#e3c98f; --help:#d9a898;
+}
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#232826; --card:#2b312e; --ink:#e6e8e3; --muted:#9aa49d; --line:#3a413d;
+    --sage:#7f9a87; --sage-d:#a7c2af; --sand:#4a4436; --blush:#4a3b36; --sky:#34444b; }
+}
+*{box-sizing:border-box;margin:0}
+body{font-family:'Nunito',system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5;padding:0 16px 48px}
+.wrap{max-width:720px;margin:0 auto}
+header{padding:28px 0 16px;display:flex;align-items:center;gap:14px}
+.ava{width:56px;height:56px;border-radius:50%;background:var(--blush);display:grid;place-items:center;font-size:28px;flex:none}
+header h1{font-size:22px;font-weight:700}
+header p{color:var(--muted);font-size:14px}
+.hello{background:var(--sand);border-radius:18px;padding:16px 18px;margin-bottom:8px}
+.hello h2{margin:0;font-size:19px;color:var(--ink);font-weight:700}
+.hello p{margin-top:4px;font-size:14px;color:var(--ink)}
+.ev{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--sage);border-radius:16px;padding:12px 16px;margin-bottom:8px}
+.ev.soon{border-left-color:var(--help);background:var(--blush)}
+.ev .when{font-size:13px;font-weight:700;color:var(--sage-d)}
+.ev.soon .when{color:var(--ink)}
+.ev h3{font-size:16px;font-weight:700;margin-top:2px}
+.ev p{font-size:14px;color:var(--muted);margin-top:2px}
+.ev.soon p{color:var(--ink)}
+.evh{font-size:15px;font-weight:700;margin:4px 0 8px}
+nav{position:sticky;top:0;z-index:5;background:var(--bg);padding:8px 0;display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+nav button{font:inherit;font-size:14px;font-weight:600;border:1px solid var(--line);background:var(--card);color:var(--muted);padding:10px 4px;border-radius:14px;cursor:pointer;transition:.2s}
+nav button.on{background:var(--sage);border-color:var(--sage);color:#fff}
+.pick{display:flex;gap:8px;align-items:center;padding:14px 0 4px;flex-wrap:wrap}
+.pick button,.pick input,.mon{font:inherit;font-size:14px;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:7px 12px;border-radius:12px;cursor:pointer}
+.pick .tdy{background:var(--sand);border-color:var(--sand)}
+.pick input{flex:1;min-width:140px}
+.dl{font-size:14px;color:var(--muted);font-weight:600;margin-top:6px;text-transform:capitalize}
+.mon{margin-top:10px;max-width:100%}
+.empty{color:var(--muted);text-align:center;font-size:14px}
+section{display:none;padding-top:10px}
+section.on{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px 18px;margin-top:12px}
+.row{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.card h3{font-size:16px;font-weight:700}
+.card .sub{color:var(--muted);font-size:14px;margin-top:2px}
+.note{font-size:14px;margin-top:8px;padding:8px 12px;background:var(--bg);border-radius:12px}
+.tag{font-size:12px;font-weight:700;padding:3px 10px;border-radius:99px;white-space:nowrap;color:#3f4a45}
+.tag.good{background:var(--good)} .tag.mid{background:var(--mid)} .tag.help{background:var(--help)}
+h2{font-size:15px;color:var(--muted);font-weight:600;margin:24px 0 0}
+.bar{height:8px;background:var(--line);border-radius:99px;margin-top:8px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--sage);border-radius:99px}
+.bar.mid i{background:var(--mid)} .bar.help i{background:var(--help)}
+.tips{padding-left:18px;margin-top:6px;font-size:14px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px}
+.ph{border-radius:16px;aspect-ratio:4/3;display:grid;place-items:center;font-size:44px;cursor:pointer;position:relative;overflow:hidden;border:1px solid var(--line)}
+.ph img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+.ph span{position:absolute;left:0;right:0;bottom:0;padding:18px 10px 8px;font-size:12px;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.45))}
+.dhead{font-size:14px;color:var(--muted);margin-top:22px;font-weight:600}
+#lb{position:fixed;inset:0;background:rgba(30,35,32,.8);display:none;place-items:center;padding:20px;z-index:20}
+#lb.on{display:grid}
+#lb div{background:var(--card);border-radius:20px;padding:20px;max-width:460px;width:100%;text-align:center}
+#lb .big{aspect-ratio:4/3;border-radius:14px;display:grid;place-items:center;font-size:90px;overflow:hidden}
+#lb img{width:100%;height:100%;object-fit:cover}
+#lb p{margin-top:12px;font-size:15px}
+footer{text-align:center;color:var(--muted);font-size:12px;margin-top:36px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="ava">🧸</div>
+    <div>
+      <h1 id="name"></h1>
+      <p id="group"></p>
+      <p id="since"></p>
+    </div>
+  </header>
+
+  <div class="hello">
+    <h2 id="hi"></h2>
+    <p id="hiText"></p>
+  </div>
+
+  <div id="events"></div>
+
+  <nav id="tabs"></nav>
+
+  <section id="subjects"><div class="pick"></div><div class="dl"></div><div class="list"></div></section>
+  <section id="food"><div class="pick"></div><div class="dl"></div><div class="list"></div></section>
+  <section id="progress"><select class="mon" id="pMon"></select><div id="pBody"></div></section>
+  <section id="photos"><select class="mon" id="phMon"></select><div id="phBody"></div></section>
+
+  <footer>Обновляется воспитателем каждый день 🌿</footer>
+</div>
+
+<div id="lb"><div><div class="big"></div><p></p></div></div>
+
+<script>
+/* ============ ДАННЫЕ — менять только здесь ============ */
+const child = {
+  name: "Алиса",
+  group: "Средняя группа «Солнышки» · воспитатель Гулнар",
+  born: "2020-06-15",      // дата рождения (для возраста)
+  enrolled: "2023-09-01"   // дата поступления в сад — с неё родителю доступна вся история
+};
+
+// Записи хранятся по датам: "ГГГГ-ММ-ДД": [...]. Добавляйте новый день — старые остаются.
+// level: good = отлично, mid = хорошо, help = нужна помощь
+const iso = n => { const d=new Date(); d.setDate(d.getDate()-n); return d.toLocaleDateString("sv-SE"); };
+
+const subjects = {
+  [iso(0)]: [
+    { n:"Математика", t:"Считаем до 7, сравниваем «больше — меньше»", l:"good", c:"Быстро сосчитала все предметы, помогала другим." },
+    { n:"Развитие речи", t:"Рассказ по картинке «Осень в лесу»", l:"mid", c:"Составила 2 предложения, стесняется говорить громко." },
+    { n:"Рисование", t:"Осенние листья акварелью", l:"good", c:"Очень аккуратная работа, красивые цвета." },
+    { n:"Физкультура", t:"Эстафета с мячом", l:"mid", c:"Была активной, мяч ловит пока неуверенно." }
+  ],
+  [iso(1)]: [
+    { n:"Окружающий мир", t:"Домашние и дикие животные", l:"good", c:"Назвала всех животных, знает, где они живут." },
+    { n:"Лепка", t:"Ёжик из пластилина", l:"help", c:"Трудно даётся раскатывание шариков — потренируйте дома." },
+    { n:"Музыка", t:"Песня «Осенний дождик»", l:"good", c:"Пела вместе со всеми, хорошо держит ритм." }
+  ],
+  [iso(2)]: [
+    { n:"Буквы и звуки", t:"Звук [С], слова на «С»", l:"mid", c:"Слышит звук в начале слова, в конце пока путает." },
+    { n:"Математика", t:"Геометрические фигуры", l:"good", c:"Отлично различает круг, квадрат, треугольник." }
+  ]
+};
+
+const food = {
+  [iso(0)]: [
+    { m:"Завтрак · 8:30", d:"Овсяная каша с яблоком, чай", a:100 },
+    { m:"Второй завтрак · 10:30", d:"Банан, сок", a:100 },
+    { m:"Обед · 12:00", d:"Овощной суп, куриная котлета, гречка, компот", a:60, c:"Суп съела почти весь, гречку оставила." },
+    { m:"Полдник · 15:30", d:"Творожная запеканка, молоко", a:80 }
+  ],
+  [iso(1)]: [
+    { m:"Завтрак · 8:30", d:"Манная каша, бутерброд с сыром, какао", a:50, c:"Кашу не захотела, бутерброд съела." },
+    { m:"Второй завтрак · 10:30", d:"Яблоко", a:100 },
+    { m:"Обед · 12:00", d:"Борщ, рыбные котлеты, пюре, кисель", a:80 },
+    { m:"Полдник · 15:30", d:"Печенье, кефир", a:100 }
+  ],
+  [iso(2)]: [
+    { m:"Завтрак · 8:30", d:"Рисовая каша, чай", a:100 },
+    { m:"Обед · 12:00", d:"Щи, тефтели, макароны, компот", a:100 },
+    { m:"Полдник · 15:30", d:"Ватрушка, молоко", a:60 }
+  ]
+};
+
+// События, утренники, собрания. Прошедшие скрываются сами, ближайшие показываются на главной.
+// Поля: date, time (необязательно), title, place (необязательно), note — что взять / во что одеть.
+const events = [
+  { date:iso(-3), time:"10:00", title:"Осенний утренник «Золотая осень»", place:"Актовый зал", note:"Приходите к 9:40. Ребёнку — нарядная одежда в жёлто-оранжевых тонах, сменная обувь." },
+  { date:iso(-10), time:"18:00", title:"Родительское собрание", place:"Группа «Солнышки»", note:"Тема: подготовка к школе." },
+  { date:iso(-24), title:"Фотосессия группы", note:"Приведите детей в чистой нарядной одежде." }
+];
+
+// Успехи — «срезы» по месяцам. Для любого месяца показывается последний срез, который не позже него.
+const progressSnaps = [
+  { from:"2023-09", skills:[
+      { n:"Счёт и математика", v:25, l:"help" }, { n:"Речь и словарный запас", v:30, l:"help" },
+      { n:"Мелкая моторика (лепка, рисование)", v:20, l:"help" }, { n:"Творчество", v:50, l:"mid" },
+      { n:"Физическая активность", v:45, l:"mid" } ],
+    strong:["Быстро привыкает к группе"], improve:[],
+    behavior:[ { n:"Адаптация", v:"Первые недели плакала при прощании, к октябрю успокоилась", l:"mid" } ] },
+  { from:"2025-09", skills:[
+      { n:"Счёт и математика", v:70, l:"mid" }, { n:"Речь и словарный запас", v:50, l:"mid" },
+      { n:"Мелкая моторика (лепка, рисование)", v:40, l:"help" }, { n:"Творчество", v:80, l:"good" },
+      { n:"Физическая активность", v:60, l:"mid" } ],
+    strong:["Считает до 5","Любит рисовать"], improve:[],
+    behavior:[ { n:"Настроение", v:"Спокойное, весёлое", l:"good" } ] },
+  { from:iso(0).slice(0,7),
+    skills: [
+      { n:"Счёт и математика", v:85, l:"good" },
+      { n:"Речь и словарный запас", v:60, l:"mid" },
+      { n:"Мелкая моторика (лепка, рисование)", v:50, l:"help" },
+      { n:"Творчество", v:90, l:"good" },
+      { n:"Физическая активность", v:70, l:"mid" }
+    ],
+    strong: ["Любит считать и играть с фигурами", "Очень аккуратно рисует", "Добрая, помогает друзьям"],
+    improve: [
+      { n:"Мелкая моторика", tips:["Лепка из пластилина или солёного теста 10 минут в день","Нанизывание бусин, застёгивание пуговиц"] },
+      { n:"Громкая и связная речь", tips:["Вечером просить пересказать день в 2–3 предложениях","Читать вместе и обсуждать картинки"] }
+    ],
+    behavior: [
+      { n:"Настроение", v:"Спокойное, весёлое", l:"good" },
+      { n:"Общение с детьми", v:"Охотно играет с подругами, конфликтов нет", l:"good" },
+      { n:"Следование правилам", v:"Иногда нужно напомнить убирать игрушки", l:"mid" },
+      { n:"Дневной сон", v:"Засыпает сама, спит около 1,5 часа", l:"good" }
+    ] }
+];
+
+// Фото по датам. Вместо emoji укажите src:"photos/2026-10-07-1.jpg"
+const photos = [
+  { date:iso(0), items:[ {e:"🍂", cap:"Собираем осенние листья на прогулке"}, {e:"🎨", cap:"Рисуем акварелью"}, {e:"🤸", cap:"Эстафета на физкультуре"} ] },
+  { date:iso(1), items:[ {e:"🐿️", cap:"Лепим ёжиков"}, {e:"🎶", cap:"Музыкальное занятие"} ] },
+  { date:iso(4), items:[ {e:"🧩", cap:"Играем в пазлы"}, {e:"📚", cap:"Читаем сказку"}, {e:"🌳", cap:"Прогулка в парке"}, {e:"🍎", cap:"Праздник урожая"} ] }
+];
+/* ======================================================= */
+
+const LBL = { good:"Отлично", mid:"Хорошо", help:"Нужна помощь" };
+const BG = ["var(--sage)","var(--blush)","var(--sky)","var(--sand)"];
+const $ = (s,r=document)=>r.querySelector(s);
+const today = iso(0);
+const dt = s => new Date(s+"T00:00");
+const longDate = s => dt(s).toLocaleDateString("ru-RU",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+const monLabel = m => dt(m+"-01").toLocaleDateString("ru-RU",{month:"long",year:"numeric"});
+const monthsDesc = () => {
+  const out=[], a=child.enrolled.slice(0,7); let d=dt(today.slice(0,7)+"-01");
+  while(d.toLocaleDateString("sv-SE").slice(0,7)>=a){ out.push(d.toLocaleDateString("sv-SE").slice(0,7)); d.setMonth(d.getMonth()-1); }
+  return out;
+};
+const monOpts = () => monthsDesc().map(m=>`<option value="${m}">${monLabel(m)}</option>`).join("");
+
+function ageText(){
+  const b=dt(child.born), n=new Date();
+  let y=n.getFullYear()-b.getFullYear();
+  if(n.getMonth()<b.getMonth()||(n.getMonth()===b.getMonth()&&n.getDate()<b.getDate())) y--;
+  const w = y%10===1&&y%100!==11?"год":(y%10>=2&&y%10<=4&&(y%100<10||y%100>=20))?"года":"лет";
+  return `${y} ${w}`;
+}
+
+$("#name").textContent = child.name;
+$("#group").textContent = child.group;
+$("#since").textContent = `${ageText()} · в садике с ${dt(child.enrolled).toLocaleDateString("ru-RU",{day:"numeric",month:"long",year:"numeric"})}`;
+
+// приветствие
+const hour = new Date().getHours();
+const hello = hour<5 ? "Доброй ночи" : hour<12 ? "Доброе утро" : hour<18 ? "Добрый день" : "Добрый вечер";
+$("#hi").textContent = `${hello}, дорогие родители! 👋`;
+$("#hiText").textContent = `Здесь вы можете узнать, как прошёл день у ${child.name}: чем занимались, что ели и чему научились. Весь архив доступен с первого дня в садике.`;
+
+// ближайшие события
+(function(){
+  const up = events.filter(e=>e.date>=today).sort((a,b)=>(a.date+(a.time||""))<(b.date+(b.time||""))?-1:1);
+  if(!up.length) return;
+  const left = s => Math.round((dt(s)-dt(today))/864e5);
+  const rel = n => n===0?"Сегодня":n===1?"Завтра":`Через ${n} дн.`;
+  $("#events").innerHTML = `<div class="evh">📅 Ближайшие события</div>` + up.map(e=>{
+    const n = left(e.date);
+    const d = dt(e.date).toLocaleDateString("ru-RU",{weekday:"long",day:"numeric",month:"long"});
+    return `<div class="ev ${n<=2?"soon":""}"><div class="when">${rel(n)} · ${d}${e.time?`, ${e.time}`:""}</div><h3>${e.title}</h3>${e.place?`<p>📍 ${e.place}</p>`:""}${e.note?`<p>${e.note}</p>`:""}</div>`;
+  }).join("");
+})();
+
+// вкладки
+const tabs = [["subjects","📚 Предметы"],["food","🍎 Питание"],["progress","🌱 Успехи"],["photos","📷 Фото"]];
+$("#tabs").innerHTML = tabs.map(([id,t])=>`<button data-t="${id}">${t}</button>`).join("");
+function openTab(id){
+  document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.t===id));
+  document.querySelectorAll("section").forEach(s=>s.classList.toggle("on",s.id===id));
+  try{localStorage.setItem("tab",id)}catch(e){}
+}
+$("#tabs").onclick = e => { const b=e.target.closest("button"); if(b) openTab(b.dataset.t); };
+
+// предметы и питание: выбор любой даты с момента поступления
+const subjTpl = s => `<div class="card"><div class="row"><div><h3>${s.n}</h3><div class="sub">${s.t}</div></div><span class="tag ${s.l}">${LBL[s.l]}</span></div>${s.c?`<div class="note">💬 ${s.c}</div>`:""}</div>`;
+const foodTpl = f => {
+  const cls = f.a>=80?"":f.a>=50?"mid":"help";
+  const word = f.a>=80?"Съел(а) всё":f.a>=50?"Съел(а) половину":"Ел(а) мало";
+  return `<div class="card"><div class="row"><div><h3>${f.m}</h3><div class="sub">${f.d}</div></div><span class="sub">${word}</span></div><div class="bar ${cls}"><i style="width:${f.a}%"></i></div>${f.c?`<div class="note">💬 ${f.c}</div>`:""}</div>`;
+};
+const daySecs = [["subjects",subjects,subjTpl],["food",food,foodTpl]];
+let cur = today;
+function renderDay(){
+  daySecs.forEach(([id,data,tpl])=>{
+    const box=$("#"+id);
+    $(".pick input",box).value = cur;
+    $(".dl",box).textContent = longDate(cur);
+    const r = data[cur];
+    $(".list",box).innerHTML = r ? r.map(tpl).join("") : `<div class="card empty">За этот день записей нет</div>`;
+  });
+}
+function setDay(v){ if(!v||v<child.enrolled||v>today) return; cur=v; renderDay(); }
+function shift(n){ const d=dt(cur); d.setDate(d.getDate()+n); setDay(d.toLocaleDateString("sv-SE")); }
+daySecs.forEach(([id])=>{
+  const box=$("#"+id), p=$(".pick",box);
+  p.innerHTML = `<button data-a="-1" aria-label="Предыдущий день">‹</button><input type="date" min="${child.enrolled}" max="${today}"><button data-a="1" aria-label="Следующий день">›</button><button class="tdy" data-a="0">Сегодня</button>`;
+  p.onclick = e => { const b=e.target.closest("button"); if(!b) return; const a=+b.dataset.a; a===0?setDay(today):shift(a); };
+  $("input",p).onchange = e => setDay(e.target.value);
+});
+renderDay();
+
+// успехи: по месяцам
+function renderProgress(m){
+  const snaps = progressSnaps.filter(s=>s.from<=m).sort((a,b)=>a.from<b.from?1:-1);
+  const p = snaps[0];
+  if(!p){ $("#pBody").innerHTML = `<div class="card empty">За этот период записей нет</div>`; return; }
+  $("#pBody").innerHTML = `
+  <h2>Навыки</h2>
+  <div class="card">${p.skills.map((s,i,a)=>`<div style="margin-bottom:${i===a.length-1?0:14}px"><div class="row"><span>${s.n}</span><span class="tag ${s.l}">${LBL[s.l]}</span></div><div class="bar ${s.l==="good"?"":s.l}"><i style="width:${s.v}%"></i></div></div>`).join("")}</div>
+  <h2>Сильные стороны</h2>
+  <div class="card"><ul class="tips">${p.strong.map(s=>`<li>${s}</li>`).join("")}</ul></div>
+  ${p.improve.length?`<h2>Где подтянуть и как помочь дома</h2>${p.improve.map(x=>`<div class="card"><h3>${x.n}</h3><ul class="tips">${x.tips.map(t=>`<li>${t}</li>`).join("")}</ul></div>`).join("")}`:""}
+  <h2>Поведение</h2>
+  ${p.behavior.map(b=>`<div class="card"><div class="row"><div><h3>${b.n}</h3><div class="sub">${b.v}</div></div><span class="tag ${b.l}">${LBL[b.l]}</span></div></div>`).join("")}`;
+}
+$("#pMon").innerHTML = monOpts();
+$("#pMon").onchange = e => renderProgress(e.target.value);
+renderProgress($("#pMon").value);
+
+// фото: по месяцам
+function renderPhotos(m){
+  const gs = photos.filter(g=>g.date.slice(0,7)===m).sort((a,b)=>a.date<b.date?1:-1);
+  let n = 0;
+  $("#phBody").innerHTML = gs.length ? gs.map(g=>`<div class="dhead">${dt(g.date).toLocaleDateString("ru-RU",{day:"numeric",month:"long"})}</div><div class="grid">${g.items.map(p=>{
+    const bg = BG[n++%BG.length];
+    return `<div class="ph" style="background:${bg}" data-cap="${p.cap}" data-e="${p.e||""}" data-src="${p.src||""}">${p.src?`<img src="${p.src}" alt="">`:p.e}<span>${p.cap}</span></div>`;
+  }).join("")}</div>`).join("") : `<div class="card empty">В этом месяце фото нет</div>`;
+}
+$("#phMon").innerHTML = monOpts();
+$("#phMon").onchange = e => renderPhotos(e.target.value);
+renderPhotos($("#phMon").value);
+
+const lb = $("#lb");
+$("#phBody").onclick = e => {
+  const p = e.target.closest(".ph"); if(!p) return;
+  const big = $(".big",lb);
+  big.style.background = p.style.background;
+  big.innerHTML = p.dataset.src ? `<img src="${p.dataset.src}" alt="">` : p.dataset.e;
+  $("p",lb).textContent = p.dataset.cap;
+  lb.classList.add("on");
+};
+lb.onclick = () => lb.classList.remove("on");
+
+let saved="subjects"; try{saved=localStorage.getItem("tab")||saved}catch(e){}
+openTab(saved);
+</script>
+</body>
+</html>
